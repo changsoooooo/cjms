@@ -32,5 +32,18 @@ class PostDetail(APIView):
 
     def get(self, request, pk, format=None):
         post = self.get_object(pk)
-        serializer=Post
-https://breathtaking-life.tistory.com/136?category=835829#toc--views.py%20%ED%81%B4%EB%9E%98%EC%8A%A4%20%EC%84%A0%EC%96%B8
+        serializer=PostSerializer(post)
+        return Response(serializer.data)
+
+    def put(self, request, pk, format=None):
+        post= self.get_object(pk)
+        serializer=PostSerializer(post,data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    def delete(self,request,pk,format=None):
+        post=self.get_object(pk)
+        post.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
